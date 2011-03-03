@@ -2,24 +2,21 @@
 
 from distutils.core import setup
 
-files = ["examples.py"]
-
 setup(name='loggingdaemonrunner',
         version='0.1',
         description='Logging daemon runner library',
         author='Tarak Blah',
         author_email='tblah@web.de',
         packages=['loggingdaemonrunner'],
-        package_data = {'' : files },
-        url = '', 
-        platforms = ['any'],
-        license = "GPL-3",
-        classifiers = [
-            'License :: OSI Approved :: GNU General Public License 3 (GPL-3)',
+        url='http://github.com/tarak/python-loggingdaemonrunner',
+        license="BSD",
+        classifiers=[
+            'License :: OSI Approved :: BSD License',
+            'Environment :: No Input/Output (Daemon)',
             'Development Status :: 4 - Beta',
+            'Intended Audience :: Developers',
             'Topic :: Software Development :: Libraries :: Python Modules',
             'Programming Language :: Python'],
-        long_description = """A daemon runner class that supports logging from
-stdout and stderr to a logfile.
-"""
-     )
+        long_description="""A daemon runner class that supports the
+redirection of sys.stdin and sys.stderr to a logging.logger.
+""")

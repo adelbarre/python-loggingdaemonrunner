@@ -11,8 +11,8 @@ PEP 3143 can be found at:
 
   http://www.python.org/dev/peps/pep-3143
 
-This module requires the python-daemon package.
-On Debian-based systems it can be installed by running
+This module requires the python-daemon package. On Debian-based systems it can
+be installed by running:
 
   apt-get install python-daemon
 
@@ -21,11 +21,11 @@ Usage
 
 An example of how to use the runner can be found in the example.py file.
 
-To run the example just run:
+To run the example:
 
   python example.py start
 
-To stop the process run:
+To stop the process:
 
   python example.py stop
 

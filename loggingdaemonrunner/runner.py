@@ -28,11 +28,16 @@ import os
 import signal
 
 from daemon import DaemonContext
-from daemon.runner import DaemonRunnerInvalidActionError, DaemonRunnerStartFailureError, DaemonRunnerStopFailureError, emit_message, make_pidlockfile, is_pidfile_stale
+from daemon.runner import DaemonRunnerInvalidActionError
+from daemon.runner import DaemonRunnerStartFailureError
+from daemon.runner import DaemonRunnerStopFailureError
+from daemon.runner import emit_message
+from daemon.runner import make_pidlockfile
+from daemon.runner import is_pidfile_stale
 
 
 def openFilesFromLoggers(loggers):
-    "returns the open files used by file-based handlers of the specified loggers"
+    "returns  open files used by file-based handlers of the specified loggers"
     openFiles = []
     for logger in loggers:
         for handler in logger.handlers:
@@ -84,7 +89,9 @@ class DaemonApp(object):
           started.
 
         """
-    def __init__(self, run, pidfile_path, pidfile_timeout=60, stderr_logger=None, stdin_path="/dev/null", stdout_logger=None):
+    def __init__(self, run, pidfile_path, pidfile_timeout=60,
+                 stderr_logger=None, stdin_path=os.devnull,
+                 stdout_logger=None):
         self.pidfile_path = pidfile_path
         self.pidfile_timeout = pidfile_timeout
         self.run = run
