@@ -3,6 +3,9 @@ import logging.handlers
 import time
 
 from loggingdaemonrunner.runner import DaemonApp, LoggingDaemonRunner
+from optparse import OptionParser
+
+__version__='0.1.0'
 
 
 def getRotatingFileLogger(name, filePath, logLevel=logging.DEBUG, format=None,
@@ -25,9 +28,15 @@ def hello_world():
 
 
 if __name__ == '__main__':
+    usage = "usage: %prog [options] start|stop|restart"
+    version = "%prog " + __version__
+    parser = OptionParser(usage, version=version)
+    parser.add_option("-d", "--debug", dest="debug",
+                      action="store_true", default=True,
+                      help="Print debug information")
     stderr_logger = getRotatingFileLogger('stderr', 'stderr.log')
     stdout_logger = getRotatingFileLogger('stdout', 'stdout.log')
     app = DaemonApp(run=hello_world, pidfile_path="/tmp/example.pid",
                     stderr_logger=stderr_logger, stdout_logger=stdout_logger)
-    d = LoggingDaemonRunner(app)
+    d = LoggingDaemonRunner(app, parser)
     d.do_action()

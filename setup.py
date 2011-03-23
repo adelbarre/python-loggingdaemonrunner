@@ -17,6 +17,5 @@ setup(name='loggingdaemonrunner',
             'Intended Audience :: Developers',
             'Topic :: Software Development :: Libraries :: Python Modules',
             'Programming Language :: Python'],
-        long_description="""A daemon runner class that supports the
-redirection of sys.stdin and sys.stderr to a logging.logger.
-""")
+        long_description="""Controller for a callable running as background
+process.""")

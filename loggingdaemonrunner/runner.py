@@ -27,6 +27,8 @@ import sys
 import os
 import signal
 
+from optparse import OptionParser
+
 from daemon import DaemonContext
 from daemon.runner import DaemonRunnerInvalidActionError
 from daemon.runner import DaemonRunnerStartFailureError
@@ -121,7 +123,7 @@ class LoggingDaemonRunner(object):
         loggerFiles = openFilesFromLoggers(self.loggers_preserve)
         self.daemon_context.files_preserve.extend(loggerFiles)
 
-    def __init__(self, app):
+    def __init__(self, app, parser):
         """ Set up the parameters of a new runner.
 
             The `app` argument must have the following attributes:
@@ -141,9 +143,15 @@ class LoggingDaemonRunner(object):
             * `run`: Callable that will be invoked when the daemon is
               started.
 
+            The `parser` argument must be an optparse.OptionParser() object.
+
             """
-        self.parse_args()
         self.app = app
+        self.parser = parser
+        (options, args) = parser.parse_args()
+        self.args = args
+        self.options = options
+        self.parse_args()
         self.daemon_context = DaemonContext()
         self.daemon_context.stdin = open(app.stdin_path, 'r')
         self.stdout_logger = app.stdout_logger
@@ -157,14 +165,10 @@ class LoggingDaemonRunner(object):
                 app.pidfile_path, app.pidfile_timeout)
         self.daemon_context.pidfile = self.pidfile
 
-    def _usage_exit(self, argv):
+    def _usage_exit(self, usage_exit_code):
         """ Emit a usage message, then exit.
             """
-        progname = os.path.basename(argv[0])
-        usage_exit_code = 2
-        action_usage = "|".join(self.action_funcs.keys())
-        message = "usage: %(progname)s %(action_usage)s" % vars()
-        emit_message(message)
+        emit_message(self.parser.print_usage())
         sys.exit(usage_exit_code)
 
     def open(self):
@@ -177,19 +181,12 @@ class LoggingDaemonRunner(object):
             fileLikeObj = FileLikeLogger(self.stderr_logger)
             sys.stderr = fileLikeObj
 
-    def parse_args(self, argv=None):
+    def parse_args(self):
         """ Parse command-line arguments.
             """
-        if argv is None:
-            argv = sys.argv
-
-        min_args = 2
-        if len(argv) < min_args:
-            self._usage_exit(argv)
-
-        self.action = argv[1]
+        self.action = self.args[0]
         if self.action not in self.action_funcs:
-            self._usage_exit(argv)
+            self._usage_exit(1)
 
     def _start(self):
         """ Open the daemon context and run the application.
